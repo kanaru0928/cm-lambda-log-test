@@ -20,10 +20,19 @@ export class CmLambdaLogTestStack extends cdk.Stack {
       loggingFormat: lambda.LoggingFormat.JSON,
     });
 
-    new lambda.Function(this, "PythonFunction", {
+    new lambda.Function(this, "PythonFunctionWithText", {
       runtime: lambda.Runtime.PYTHON_3_14,
       code: lambda.Code.fromAsset(`${__dirname}/lambda/python-function`),
       handler: "main.handler",
     });
+
+    new lambda.Function(this, "PythonFunctionWithJSON", {
+      runtime: lambda.Runtime.PYTHON_3_14,
+      code: lambda.Code.fromAsset(`${__dirname}/lambda/python-function`),
+      handler: "main.handler",
+      loggingFormat: lambda.LoggingFormat.JSON,
+    });
+
+
   }
 }
