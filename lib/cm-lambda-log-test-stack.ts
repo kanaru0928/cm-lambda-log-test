@@ -9,26 +9,26 @@ export class CmLambdaLogTestStack extends cdk.Stack {
 
     new lambda.Function(this, "NodeFuntionWithText", {
       runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(`${__dirname}/lambda/node-function`),
+      code: lambda.Code.fromAsset(`${__dirname}/lambda/node`),
       handler: "index.handler",
     });
 
     new lambda.Function(this, "NodeFuntionWithJSON", {
       runtime: lambda.Runtime.NODEJS_24_X,
-      code: lambda.Code.fromAsset(`${__dirname}/lambda/node-function`),
+      code: lambda.Code.fromAsset(`${__dirname}/lambda/node`),
       handler: "index.handler",
       loggingFormat: lambda.LoggingFormat.JSON,
     });
 
     new lambda.Function(this, "PythonFunctionWithText", {
       runtime: lambda.Runtime.PYTHON_3_14,
-      code: lambda.Code.fromAsset(`${__dirname}/lambda/python-function`),
+      code: lambda.Code.fromAsset(`${__dirname}/lambda/python`),
       handler: "main.handler",
     });
 
     new lambda.Function(this, "PythonFunctionWithJSON", {
       runtime: lambda.Runtime.PYTHON_3_14,
-      code: lambda.Code.fromAsset(`${__dirname}/lambda/python-function`),
+      code: lambda.Code.fromAsset(`${__dirname}/lambda/python`),
       handler: "main.handler",
       loggingFormat: lambda.LoggingFormat.JSON,
     });
@@ -46,26 +46,23 @@ export class CmLambdaLogTestStack extends cdk.Stack {
       loggingFormat: lambda.LoggingFormat.JSON,
     });
 
-    const dotnetFunctionCode = lambda.Code.fromAsset(
-      `${__dirname}/lambda/dotnet-function`,
-      {
-        bundling: {
-          image: lambda.Runtime.DOTNET_10.bundlingImage,
-          command: [
-            "dotnet",
-            "publish",
-            "-c",
-            "Release",
-            "-r",
-            "linux-x64",
-            "--self-contained",
-            "false",
-            "-o",
-            "/asset-output",
-          ],
-        },
+    const dotnetFunctionCode = lambda.Code.fromAsset(`${__dirname}/lambda/dotnet`, {
+      bundling: {
+        image: lambda.Runtime.DOTNET_10.bundlingImage,
+        command: [
+          "dotnet",
+          "publish",
+          "-c",
+          "Release",
+          "-r",
+          "linux-x64",
+          "--self-contained",
+          "false",
+          "-o",
+          "/asset-output",
+        ],
       },
-    );
+    });
 
     new lambda.Function(this, "DotnetFunctionWithText", {
       runtime: lambda.Runtime.DOTNET_10,
