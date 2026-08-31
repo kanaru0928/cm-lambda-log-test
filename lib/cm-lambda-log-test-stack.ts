@@ -33,6 +33,51 @@ export class CmLambdaLogTestStack extends cdk.Stack {
       loggingFormat: lambda.LoggingFormat.JSON,
     });
 
+    new lambda.Function(this, "RubyFunctionWithText", {
+      runtime: lambda.Runtime.RUBY_4_0,
+      code: lambda.Code.fromAsset(`${__dirname}/lambda/ruby`),
+      handler: "main.handler",
+    });
 
+    new lambda.Function(this, "RubyFunctionWithJSON", {
+      runtime: lambda.Runtime.RUBY_4_0,
+      code: lambda.Code.fromAsset(`${__dirname}/lambda/ruby`),
+      handler: "main.handler",
+      loggingFormat: lambda.LoggingFormat.JSON,
+    });
+
+    const dotnetFunctionCode = lambda.Code.fromAsset(
+      `${__dirname}/lambda/dotnet-function`,
+      {
+        bundling: {
+          image: lambda.Runtime.DOTNET_10.bundlingImage,
+          command: [
+            "dotnet",
+            "publish",
+            "-c",
+            "Release",
+            "-r",
+            "linux-x64",
+            "--self-contained",
+            "false",
+            "-o",
+            "/asset-output",
+          ],
+        },
+      },
+    );
+
+    new lambda.Function(this, "DotnetFunctionWithText", {
+      runtime: lambda.Runtime.DOTNET_10,
+      code: dotnetFunctionCode,
+      handler: "dotnet_function::dotnet_function.Function::FunctionHandler",
+    });
+
+    new lambda.Function(this, "DotnetFunctionWithJSON", {
+      runtime: lambda.Runtime.DOTNET_10,
+      code: dotnetFunctionCode,
+      handler: "dotnet_function::dotnet_function.Function::FunctionHandler",
+      loggingFormat: lambda.LoggingFormat.JSON,
+    });
   }
 }

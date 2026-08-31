@@ -1,5 +1,8 @@
 import logging
 
+initialLogger = logging.getLogger(__name__)
+initialLogger.setLevel(logging.DEBUG)
+
 
 def handler(event, context):
     logger = logging.getLogger(__name__)
@@ -15,6 +18,8 @@ def handler(event, context):
     import sys
 
     print("Hello, this is a STDERR message", file=sys.stderr)
+
+    initialLogger.info("Hello, this is a DEBUG level message from initialLogger")
 
 
 if __name__ == "__main__":
