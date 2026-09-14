@@ -67,13 +67,13 @@ export class CmLambdaLogTestStack extends cdk.Stack {
     new lambda.Function(this, "DotnetFunctionWithText", {
       runtime: lambda.Runtime.DOTNET_10,
       code: dotnetFunctionCode,
-      handler: "dotnet_function::dotnet_function.Function::FunctionHandler",
+      handler: "dotnet-function::dotnet_function.Function::FunctionHandler",
     });
 
     new lambda.Function(this, "DotnetFunctionWithJSON", {
       runtime: lambda.Runtime.DOTNET_10,
       code: dotnetFunctionCode,
-      handler: "dotnet_function::dotnet_function.Function::FunctionHandler",
+      handler: "dotnet-function::dotnet_function.Function::FunctionHandler",
       loggingFormat: lambda.LoggingFormat.JSON,
     });
   }
