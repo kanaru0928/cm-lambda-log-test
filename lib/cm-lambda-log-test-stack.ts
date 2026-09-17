@@ -76,5 +76,29 @@ export class CmLambdaLogTestStack extends cdk.Stack {
       handler: "dotnet-function::dotnet_function.Function::FunctionHandler",
       loggingFormat: lambda.LoggingFormat.JSON,
     });
+
+    const javaFunctionCode = lambda.Code.fromAsset(`${__dirname}/lambda/java`, {
+      bundling: {
+        image: lambda.Runtime.JAVA_25.bundlingImage,
+        command: [
+          "/bin/sh",
+          "-c",
+          "mvn -q -DskipTests clean package && cp target/function.jar /asset-output/function.jar",
+        ],
+      },
+    });
+
+    new lambda.Function(this, "JavaFunctionWithText", {
+      runtime: lambda.Runtime.JAVA_25,
+      code: javaFunctionCode,
+      handler: "com.example.function.Handler::handleRequest",
+    });
+
+    new lambda.Function(this, "JavaFunctionWithJSON", {
+      runtime: lambda.Runtime.JAVA_25,
+      code: javaFunctionCode,
+      handler: "com.example.function.Handler::handleRequest",
+      loggingFormat: lambda.LoggingFormat.JSON,
+    });
   }
 }
