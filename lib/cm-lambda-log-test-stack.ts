@@ -100,5 +100,38 @@ export class CmLambdaLogTestStack extends cdk.Stack {
       handler: "com.example.function.Handler::handleRequest",
       loggingFormat: lambda.LoggingFormat.JSON,
     });
+
+    const rustFunctionCode = lambda.Code.fromAsset(`${__dirname}/lambda/rust`, {
+      bundling: {
+        image: cdk.DockerImage.fromRegistry("ghcr.io/cargo-lambda/cargo-lambda:latest"),
+        environment: {
+          CARGO_HOME: "/asset-input/.cargo",
+        },
+        command: [
+          "sh",
+          "-c",
+          "cargo lambda build --release --x86-64 && cp target/lambda/bootstrap/bootstrap /asset-output/bootstrap",
+        ],
+      },
+    });
+
+    new lambda.Function(this, "RustFunctionWithText", {
+      runtime: lambda.Runtime.PROVIDED_AL2023,
+      code: rustFunctionCode,
+      handler: "bootstrap",
+      environment: {
+        RUST_LOG: "bootstrap=trace",
+      },
+    });
+
+    new lambda.Function(this, "RustFunctionWithJSON", {
+      runtime: lambda.Runtime.PROVIDED_AL2023,
+      code: rustFunctionCode,
+      handler: "bootstrap",
+      environment: {
+        RUST_LOG: "bootstrap=trace",
+      },
+      loggingFormat: lambda.LoggingFormat.JSON,
+    });
   }
 }
